@@ -41,7 +41,7 @@ export class ReviewService {
     if (user.userType == 'customer') {
       const reviews = await this.reviewModel
         .find()
-        .sort({ review: 1 })
+        .sort({ review: -1 })
         .populate('restaurantId');
 
       return reviews;
