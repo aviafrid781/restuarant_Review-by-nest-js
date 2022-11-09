@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { UserRole } from '../model/user.type.enum';
+
 export class CreateUserDto {
   @IsNotEmpty()
   readonly fname: string;

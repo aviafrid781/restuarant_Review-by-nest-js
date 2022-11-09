@@ -1,7 +1,6 @@
 import { Document } from 'mongoose';
 import { UserRole } from '../model/user.type.enum';
 export interface UserI extends Document {
-
   fname: string;
   lname: string;
   password: string;
