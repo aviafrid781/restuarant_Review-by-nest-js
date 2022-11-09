@@ -12,6 +12,7 @@ export class UserService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     private jwtService: JwtService,
+    private readonly logger: Logger,
   ) {}
 
   async createUser(
@@ -24,8 +25,6 @@ export class UserService {
   ) {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
-    // console.log(' salt', salt);
-    console.log(' hashPassword', hashPassword);
     const user = {
       fname: fname,
       lname: lname,
@@ -35,28 +34,15 @@ export class UserService {
       userType: userType,
     };
     const createdUser = await this.userModel.create(user);
-    // createdUser.save();
     return createdUser;
   }
 
-  async findAll(limit: string, skip: string, fname: string) {
+  async findAll(limit: string, skip: string) {
     const limitValue = parseInt(limit) || 2;
     const skipValue = parseInt(skip) || 0;
-
-    console.log(fname);
-    console.log(limitValue);
-    console.log(skipValue);
-
-    const users = await this.userModel
-      .find({ fname: fname })
-      .sort({ fname: 1 })
-      .skip(skipValue)
-      .limit(limitValue);
+    this.logger.log(skipValue);
+    const users = await this.userModel.find().skip(skipValue).limit(limitValue);
     return users;
-  }
-
-  async find(id: string) {
-    return await this.userModel.findById(id);
   }
 
   async signIn(

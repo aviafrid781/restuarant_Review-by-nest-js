@@ -27,6 +27,6 @@ export class ReviewController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   findAll(@Param('review') review: number, @GetUser() user: UserI) {
-    return this.reviewService.findAll(review, user);
+    return this.reviewService.findAll(user);
   }
 }

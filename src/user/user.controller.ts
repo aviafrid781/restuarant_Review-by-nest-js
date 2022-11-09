@@ -27,26 +27,16 @@ export class UserController {
       createUserDto.fname,
       createUserDto.lname,
       createUserDto.email,
-      createUserDto.password,    
+      createUserDto.password,
       createUserDto.address,
       createUserDto.userType,
     );
   }
-  
+
   @Get()
-  findAll(
-    @Param('limit') limit: string,
-    @Param('skip') skip: string,
-    @Param('fname') fname: string,
-  ) {
-    return this.userService.findAll(limit, skip, fname);
+  findAll(@Param('limit') limit: string, @Param('skip') skip: string) {
+    return this.userService.findAll(limit, skip);
   }
-
-  @Get(':id')
-  async find(@Param('id') id: string) {
-    return this.userService.find(id);
-  }
-
   @Post('signIn')
   signIn(
     @Body('email') email: string,

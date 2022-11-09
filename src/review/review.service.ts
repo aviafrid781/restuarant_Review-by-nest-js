@@ -37,12 +37,12 @@ export class ReviewService {
     }
   }
 
-  async findAll(review: number, user: UserI) {
+  async findAll(user: UserI) {
     if (user.userType == 'customer') {
       const reviews = await this.reviewModel
         .find()
         .sort({ review: -1 })
-        .populate('restaurantId');
+        .populate('customer');
 
       return reviews;
     } else {

@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserRole } from 'src/user/model/user.type.enum';
-
 export type RestaurantDocument = Restaurant & Document;
-
+import { User } from 'src/user/schema/user.schema';
+import mongoose from 'mongoose';
 @Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class Restaurant {
   @Prop({
@@ -20,17 +19,10 @@ export class Restaurant {
   })
   address: string;
 
-  @Prop({
-    type: String,
-  })
-  owner: string;
+ 
 
-//   @Prop({
-//     type: String,
-//     enum: [UserRole.Owner, UserRole.Customer],
-//     //default: UserRole.Admin
-//   })
-//   userType: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  owner: User;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

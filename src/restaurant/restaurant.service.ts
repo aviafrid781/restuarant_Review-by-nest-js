@@ -1,6 +1,14 @@
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
+import {
+  Get,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { AuthGuard } from '@nestjs/passport';
 import { Model } from 'mongoose';
+import { GetUser } from 'src/user/get-user.decorator';
 import { UserI } from 'src/user/interfaces/user.interface';
 import { Restaurant } from './schema/restaurant.schema';
 @Injectable()
@@ -18,7 +26,6 @@ export class RestaurantService {
     owner: string,
     user: UserI,
   ) {
-
     this.logger.log(user);
     if (user.userType == 'owner') {
       const restaurant = {
@@ -28,11 +35,23 @@ export class RestaurantService {
         owner: owner,
       };
       const createdRestaurant = await this.restaurantModel.create(restaurant);
-      // createdUser.save();
+
       return createdRestaurant;
     } else {
       throw new UnauthorizedException(
         'Sorry!! You are not owner of restaurant',
+      );
+    }
+  }
+
+  async findAll(user: UserI) {
+    if (user.userType == 'owner') {
+      const reviews = await this.restaurantModel.find().populate('owner');
+
+      return reviews;
+    } else {
+      throw new UnauthorizedException(
+        'You can see restaurant list! You are not owner of Owner',
       );
     }
   }

@@ -1,8 +1,7 @@
 import { Document } from 'mongoose';
 export interface ReviewI extends Document {
-  readonly fname: string;
-  readonly restaurantId: string;
-  readonly review: number;
-  readonly customer: string;
-  
+  fname: string;
+  restaurantId: string;
+  review: number;
+  customer: string;
 }
