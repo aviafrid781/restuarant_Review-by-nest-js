@@ -7,7 +7,6 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './schema/user.schema';
 @Injectable()
 export class UserService {
-  // findOne: any;
   constructor(
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
@@ -25,16 +24,22 @@ export class UserService {
   ) {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
-    const user = {
-      fname: fname,
-      lname: lname,
-      email: email,
-      password: hashPassword,
-      address: address,
-      userType: userType,
-    };
-    const createdUser = await this.userModel.create(user);
-    return createdUser;
+    const exitEmail = await this.userModel.findOne({ email });
+    this.logger.log(exitEmail);
+    if (!exitEmail) {
+      const user = {
+        fname: fname,
+        lname: lname,
+        email: email,
+        password: hashPassword,
+        address: address,
+        userType: userType,
+      };
+      const createdUser = await this.userModel.create(user);
+      return createdUser;
+    } else {
+      return 'user email exited';
+    }
   }
 
   async findAll(limit: string, skip: string) {

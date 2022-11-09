@@ -30,7 +30,7 @@ export class ReviewService {
         comment: comment,
       };
       const createdReview = await this.reviewModel.create(reviews);
-      // createdUser.save();
+  
       return createdReview;
     } else {
       throw new UnauthorizedException('Sorry!! You are not owner of Customer');

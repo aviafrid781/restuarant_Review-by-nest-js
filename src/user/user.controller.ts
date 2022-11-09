@@ -20,9 +20,8 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('user')
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    
+  @Post()
+  async createUser(@Body() createUserDto: CreateUserDto, email: string) {
     return await this.userService.createUser(
       createUserDto.fname,
       createUserDto.lname,
@@ -37,6 +36,7 @@ export class UserController {
   findAll(@Param('limit') limit: string, @Param('skip') skip: string) {
     return this.userService.findAll(limit, skip);
   }
+
   @Post('signIn')
   signIn(
     @Body('email') email: string,
