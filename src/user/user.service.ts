@@ -1,10 +1,13 @@
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
-import { JwtPayload } from './jwt-payload.interface';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
+import { CreateUserDto } from './dto/create-user.dto';
+import { JwtPayload } from './jwt-payload.interface';
 import { User, UserDocument } from './schema/user.schema';
+import * as mongoose from 'mongoose'
+
 @Injectable()
 export class UserService {
   // findOne: any;
@@ -12,30 +15,21 @@ export class UserService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  async createUser(
-    fname: string,
-    lname: string,
-    email: string,
-    password: string,
-    address: string,
-    userType: string,
-  ) {
+  async createUser(createUserDto: CreateUserDto): Promise<mongoose.Document<unknown, any, UserDocument> & User & Document & { _id: mongoose.Types.ObjectId; }> {
     const salt = await bcrypt.genSalt();
-    const hashPassword = await bcrypt.hash(password, salt);
-    // console.log(' salt', salt);
+    const hashPassword = await bcrypt.hash(createUserDto.password, salt);
     console.log(' hashPassword', hashPassword);
     const user = {
-      fname: fname,
-      lname: lname,
-      email: email,
+      fname: createUserDto.fname ? createUserDto.fname : "",
+      lname: createUserDto.lname ? createUserDto.lname : "",
+      email: createUserDto.email ? createUserDto.email : "",
       password: hashPassword,
-      address: address,
-      userType: userType,
+      address: createUserDto.address ? createUserDto.address : "",
+      userType: createUserDto.userType ? createUserDto.userType : "",
     };
     const createdUser = await this.userModel.create(user);
-    // createdUser.save();
     return createdUser;
   }
 
@@ -64,8 +58,8 @@ export class UserService {
     password: string,
   ): Promise<{
     user: import('mongoose').Document<unknown, any, UserDocument> &
-      User &
-      Document & { _id: import('mongoose').Types.ObjectId };
+    User &
+    Document & { _id: import('mongoose').Types.ObjectId };
     accessToken: string;
   }> {
     const user = await this.userModel.findOne({ email });
