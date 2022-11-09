@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/user/get-user.decorator';
 import { UserI } from 'src/user/interfaces/user.interface';
@@ -22,5 +22,11 @@ export class ReviewController {
       createReview.comment,
       user,
     );
+  }
+
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  findAll(@Param('review') review: number, @GetUser() user: UserI) {
+    return this.reviewService.findAll(review, user);
   }
 }

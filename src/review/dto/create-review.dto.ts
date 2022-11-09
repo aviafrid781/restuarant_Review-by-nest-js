@@ -4,7 +4,7 @@ export class CreateReviewDto {
   @IsEmail()
   readonly customer: string;
   @IsNotEmpty()
-  readonly review: string;
+  readonly review: number;
   readonly comment: string;
   
 }

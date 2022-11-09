@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { User, UserSchema } from './schema/user.schema';
@@ -21,7 +21,7 @@ import { jwtStrategy } from './jwt.strategy';
   ],
 
   controllers: [UserController],
-  providers: [UserService, jwtStrategy],
+  providers: [UserService, jwtStrategy,Logger],
   exports: [jwtStrategy, MongooseModule],
 })
 export class UserModule {}

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserI } from 'src/user/interfaces/user.interface';
@@ -8,6 +8,7 @@ export class RestaurantService {
   constructor(
     @InjectModel(Restaurant.name)
     private restaurantModel: Model<Document>,
+    private readonly logger: Logger,
   ) {}
 
   async createRestaurant(
@@ -18,7 +19,7 @@ export class RestaurantService {
     user: UserI,
   ) {
 
-    console.log(user);
+    this.logger.log(user);
     if (user.userType == 'owner') {
       const restaurant = {
         name: name,

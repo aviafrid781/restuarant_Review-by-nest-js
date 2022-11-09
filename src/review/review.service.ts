@@ -1,24 +1,26 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+//import { UserI } from './../user/interfaces/user.interface';
+import { ReviewI } from './interfaces/review.interface';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Restaurant } from 'src/restaurant/schema/restaurant.schema';
-import { UserI } from 'src/user/interfaces/user.interface';
 import { Model } from 'mongoose';
+import { UserI } from 'src/user/interfaces/user.interface';
 import { Review } from './schema/review.schema';
 @Injectable()
 export class ReviewService {
   constructor(
     @InjectModel(Review.name)
     private reviewModel: Model<Document>,
+    private readonly logger: Logger,
   ) {}
 
   async createReview(
     restaurantId: string,
     customer: string,
-    review: string,
+    review: number,
     comment: string,
     user: UserI,
   ) {
-    console.log(user);
+    this.logger.log(user);
 
     if (user.userType == 'customer') {
       const reviews = {
@@ -32,6 +34,21 @@ export class ReviewService {
       return createdReview;
     } else {
       throw new UnauthorizedException('Sorry!! You are not owner of Customer');
+    }
+  }
+
+  async findAll(review: number, user: UserI) {
+    if (user.userType == 'customer') {
+      const reviews = await this.reviewModel
+        .find()
+        .sort({ review: 1 })
+        .populate('restaurantId');
+
+      return reviews;
+    } else {
+      throw new UnauthorizedException(
+        'You can not give Review!! You are not owner of Customer',
+      );
     }
   }
 }

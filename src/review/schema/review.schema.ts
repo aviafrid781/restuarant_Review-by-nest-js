@@ -11,9 +11,9 @@ export class Review {
   customer: string;
 
   @Prop({
-    type: String,
+    type: Number,
   })
-  review: string;
+  review: number;
 
   @Prop({
     type: String,
