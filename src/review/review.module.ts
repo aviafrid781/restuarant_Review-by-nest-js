@@ -12,6 +12,6 @@ import { Review, ReviewSchema } from './schema/review.schema';
   ],
   controllers: [ReviewController],
   providers: [ReviewService, Logger],
-  exports: [MongooseModule],
+  exports: [MongooseModule]
 })
 export class ReviewModule {}
