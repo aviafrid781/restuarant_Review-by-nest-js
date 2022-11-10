@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { JwtPayload } from './jwt-payload.interface';
 import { User, UserDocument } from './schema/user.schema';
+import { CreateUserDto } from './dto/create-user.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -12,35 +13,28 @@ export class UserService {
     private userModel: Model<UserDocument>,
     private jwtService: JwtService,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
-  async createUser(
-    fname: string,
-    lname: string,
-    email: string,
-    password: string,
-    address: string,
-    userType: string,
-  ) {
+  async createUser(createUserDto: CreateUserDto) {
     const salt = await bcrypt.genSalt();
-    const hashPassword = await bcrypt.hash(password, salt);
-    const exitUser = await this.userModel.findOne({ email });
+    const hashPassword = await bcrypt.hash(createUserDto.password, salt);
+    const exitUser = await this.userModel.findOne({ email:createUserDto.email });
 
     if (!exitUser) {
       const user = {
-        fname: fname,
-        lname: lname,
-        email: email,
+        fname: createUserDto.fname ? createUserDto.fname : "",
+        lname: createUserDto.lname ? createUserDto.lname : "",
+        email: createUserDto.email ? createUserDto.email : "",
         password: hashPassword,
-        address: address,
-        userType: userType,
+        address: createUserDto.address ? createUserDto.address : "",
+        userType: createUserDto.userType ? createUserDto.userType : "",
       };
 
       const createdUser = await this.userModel.create(user);
-      const payload: JwtPayload = { email };
+      const payload: JwtPayload = {  email:createUserDto.email, };
       const accessToken: string = await this.jwtService.sign(payload);
 
-      const userObj  = createdUser.toObject();
+      const userObj = createdUser.toObject();
       delete userObj.password;
       return { createdUser: userObj, accessToken: accessToken };
     } else {

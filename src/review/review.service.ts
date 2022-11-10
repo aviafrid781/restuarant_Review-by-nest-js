@@ -28,7 +28,7 @@ export class ReviewService {
         review: review,
         comment: comment,
       };
-      if (review >= 1 && review <= 5) {
+      if (review >= 0 && review <= 5) {
         const createdReview = await this.reviewModel.create(reviews);
 
         return createdReview;

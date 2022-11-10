@@ -24,12 +24,7 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
   ): Promise<{ accessToken: string }> {
     return await this.userService.createUser(
-      createUserDto.fname,
-      createUserDto.lname,
-      createUserDto.email,
-      createUserDto.password,
-      createUserDto.address,
-      createUserDto.userType,
+      createUserDto
     );
   }
 
@@ -44,7 +39,7 @@ export class UserController {
   ): Promise<{ accessToken: string }> {
     return this.userService.signIn(email, password);
   }
-  
+
   @Post('test')
   @UseGuards(AuthGuard('jwt'))
   test(@Req() req, @GetUser() user: UserI) {
