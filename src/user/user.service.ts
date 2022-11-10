@@ -26,8 +26,7 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     const exitUser = await this.userModel.findOne({ email });
-    if (!exitUser)
-      {
+    if (!exitUser) {
       const user = {
         fname: fname,
         lname: lname,
@@ -38,12 +37,9 @@ export class UserService {
       };
       const createdUser = await this.userModel.create(user);
       return createdUser;
-
-      }
-      else 
-      {
-        return "your email is already used"
-      }
+    } else {
+      return 'your email is already used';
+    }
   }
 
   async findAll(limit: string, skip: string) {
