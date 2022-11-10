@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUser } from './get-user.decorator';
 import { UserI } from './interfaces/user.interface';
-import { UserDocument } from './schema/user.schema';
+
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -43,7 +43,7 @@ export class UserController {
   ): Promise<{ accessToken: string }> {
     return this.userService.signIn(email, password);
   }
-//hello cheak git
+
   @Post('test')
   @UseGuards(AuthGuard('jwt'))
   test(@Req() req, @GetUser() user: UserI) {

@@ -29,9 +29,15 @@ export class ReviewService {
         review: review,
         comment: comment,
       };
-      const createdReview = await this.reviewModel.create(reviews);
-      // createdUser.save();
-      return createdReview;
+      if (review >= 1 && review <= 5) {
+        const createdReview = await this.reviewModel.create(reviews);
+
+        return createdReview;
+      } else {
+        throw new UnauthorizedException(
+          'please give a review range between  >=1 and <=5',
+        );
+      }
     } else {
       throw new UnauthorizedException('Sorry!! You are not owner of Customer');
     }
@@ -42,7 +48,8 @@ export class ReviewService {
       const reviews = await this.reviewModel
         .find()
         .sort({ review: -1 })
-        .populate('customer');
+        .populate('customer')
+        .populate('restaurantId');
 
       return reviews;
     } else {

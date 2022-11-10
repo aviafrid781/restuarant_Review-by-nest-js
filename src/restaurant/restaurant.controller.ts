@@ -9,7 +9,7 @@ import { RestaurantService } from './restaurant.service';
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) { }
 
-  @Post('')
+  @Post()
   @UseGuards(AuthGuard('jwt'))
   async createRestaurant(
     @Body() createRestaurantDto: CreateRestaurantDto,

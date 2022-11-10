@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Restaurant } from 'src/restaurant/schema/restaurant.schema';
-export type ReviewDocument = Review & Document;
 import mongoose from 'mongoose';
+import { Restaurant } from 'src/restaurant/schema/restaurant.schema';
 import { User } from 'src/user/schema/user.schema';
+export type ReviewDocument = Review & Document;
 @Schema()
 export class Review {
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   customer: User;
 

@@ -51,7 +51,7 @@ export class RestaurantService {
       return reviews;
     } else {
       throw new UnauthorizedException(
-        'You can see restaurant list! You are not owner of Owner',
+        'You can not  see restaurant list! You are not owner of Owner',
       );
     }
   }

@@ -7,7 +7,6 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './schema/user.schema';
 @Injectable()
 export class UserService {
-  // findOne: any;
   constructor(
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
@@ -38,7 +37,7 @@ export class UserService {
       const createdUser = await this.userModel.create(user);
       return createdUser;
     } else {
-      return 'your email is already used';
+      throw new UnauthorizedException('your email is already used');
     }
   }
 
@@ -50,6 +49,8 @@ export class UserService {
     return users;
   }
 
+
+  
   async signIn(
     email: string,
     password: string,
@@ -67,7 +68,17 @@ export class UserService {
     ) {
       const payload: JwtPayload = { email };
       const accessToken: string = await this.jwtService.sign(payload);
-      return { user: user, accessToken: accessToken };
+
+      const res = {
+        fname: user.fname,
+        lname: user.lname,
+        email: user.email,
+        address: user.address,
+        userType: user.userType,
+      };
+      const createdRes = await this.userModel.create(res);
+
+      return { user: createdRes, accessToken: accessToken };
     } else {
       throw new UnauthorizedException('user not found');
     }
