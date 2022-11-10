@@ -25,7 +25,7 @@ export class RestaurantController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll(@GetUser() user: UserI) {
-    return this.restaurantService.findAll(user);
+  allRestaurants(@GetUser() user: UserI) {
+    return this.restaurantService.allRestaurants(user);
   }
 }

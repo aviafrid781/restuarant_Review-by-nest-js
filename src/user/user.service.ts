@@ -21,12 +21,7 @@ export class UserService {
     password: string,
     address: string,
     userType: string,
-  ): Promise<{
-    createdUser: import('mongoose').Document<unknown, any, UserDocument> &
-      User &
-      Document & { _id: import('mongoose').Types.ObjectId };
-    accessToken: string;
-  }> {
+  ) {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     const exitUser = await this.userModel.findOne({ email });
@@ -45,7 +40,9 @@ export class UserService {
       const payload: JwtPayload = { email };
       const accessToken: string = await this.jwtService.sign(payload);
 
-      return { createdUser: createdUser, accessToken: accessToken };
+      const userObj  = createdUser.toObject();
+      delete userObj.password;
+      return { createdUser: userObj, accessToken: accessToken };
     } else {
       throw new UnauthorizedException('your email is already used');
     }
@@ -61,15 +58,7 @@ export class UserService {
     };
   }
 
-  async signIn(
-    email: string,
-    password: string,
-  ): Promise<{
-    user: import('mongoose').Document<unknown, any, UserDocument> &
-      User &
-      Document & { _id: import('mongoose').Types.ObjectId };
-    accessToken: string;
-  }> {
+  async signIn(email: string, password: string) {
     const user = await this.userModel.findOne({ email });
 
     if (
@@ -79,17 +68,10 @@ export class UserService {
       const payload: JwtPayload = { email };
       const accessToken: string = await this.jwtService.sign(payload);
 
-      const res = {
-        fname: user.fname,
-        lname: user.lname,
-        email: user.email,
-        address: user.address,
-        userType: user.userType,
-      };
+      const userObj = user.toObject();
+      delete userObj.password;
 
-      const createdRes = await this.userModel.create(res);
-
-      return { user: createdRes, accessToken: accessToken };
+      return { user: userObj, accessToken: accessToken };
     } else {
       throw new UnauthorizedException('user not found');
     }

@@ -42,7 +42,7 @@ export class ReviewService {
     }
   }
 
-  async findAll(user: UserI) {
+  async AllReview(user: UserI) {
     if (user.userType == 'customer') {
       const reviews = await this.reviewModel
         .find()

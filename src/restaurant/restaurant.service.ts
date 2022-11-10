@@ -44,7 +44,7 @@ export class RestaurantService {
     }
   }
 
-  async findAll(user: UserI) {
+  async allRestaurants(user: UserI) {
     if (user.userType == 'owner') {
       const reviews = await this.restaurantModel.find().populate('owner');
 
