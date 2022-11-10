@@ -20,7 +20,8 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto): Promise<mongoose.Document<unknown, any, UserDocument> & User & Document & { _id: mongoose.Types.ObjectId; }> {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(createUserDto.password, salt);
-    console.log(' hashPassword', hashPassword);
+    const exitUser = await this.userModel.findOne({ email });
+    if (!exitUser) {
     const user = {
       fname: createUserDto.fname ? createUserDto.fname : "",
       lname: createUserDto.lname ? createUserDto.lname : "",
@@ -31,6 +32,11 @@ export class UserService {
     };
     const createdUser = await this.userModel.create(user);
     return createdUser;
+    }
+    else 
+    {
+       return 'your email is already used';
+    }
   }
 
   async findAll(limit: string, skip: string, fname: string) {
