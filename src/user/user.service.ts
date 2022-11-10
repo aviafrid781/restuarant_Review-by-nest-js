@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
-import { JwtPayload } from './jwt-payload.interface';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
+import { JwtPayload } from './jwt-payload.interface';
 import { User, UserDocument } from './schema/user.schema';
 @Injectable()
 export class UserService {
@@ -21,10 +21,16 @@ export class UserService {
     password: string,
     address: string,
     userType: string,
-  ) {
+  ): Promise<{
+    createdUser: import('mongoose').Document<unknown, any, UserDocument> &
+      User &
+      Document & { _id: import('mongoose').Types.ObjectId };
+    accessToken: string;
+  }> {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     const exitUser = await this.userModel.findOne({ email });
+
     if (!exitUser) {
       const user = {
         fname: fname,
@@ -34,8 +40,12 @@ export class UserService {
         address: address,
         userType: userType,
       };
+
       const createdUser = await this.userModel.create(user);
-      return createdUser;
+      const payload: JwtPayload = { email };
+      const accessToken: string = await this.jwtService.sign(payload);
+
+      return { createdUser: createdUser, accessToken: accessToken };
     } else {
       throw new UnauthorizedException('your email is already used');
     }
@@ -46,11 +56,11 @@ export class UserService {
     const skipValue = parseInt(skip) || 0;
     this.logger.log(skipValue);
     const users = await this.userModel.find().skip(skipValue).limit(limitValue);
-    return users;
+    return {
+      users,
+    };
   }
 
-
-  
   async signIn(
     email: string,
     password: string,
@@ -76,6 +86,7 @@ export class UserService {
         address: user.address,
         userType: user.userType,
       };
+
       const createdRes = await this.userModel.create(res);
 
       return { user: createdRes, accessToken: accessToken };

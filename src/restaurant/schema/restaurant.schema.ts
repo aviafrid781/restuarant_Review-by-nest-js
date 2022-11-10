@@ -19,8 +19,6 @@ export class Restaurant {
   })
   address: string;
 
- 
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   owner: User;
 }

@@ -15,13 +15,14 @@ import { GetUser } from './get-user.decorator';
 import { UserI } from './interfaces/user.interface';
 
 import { UserService } from './user.service';
-
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async createUser(@Body() createUserDto: CreateUserDto) {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<{ accessToken: string }> {
     return await this.userService.createUser(
       createUserDto.fname,
       createUserDto.lname,
@@ -43,11 +44,10 @@ export class UserController {
   ): Promise<{ accessToken: string }> {
     return this.userService.signIn(email, password);
   }
-
+  
   @Post('test')
   @UseGuards(AuthGuard('jwt'))
   test(@Req() req, @GetUser() user: UserI) {
-    console.log(req);
     return { message: 'User is authenticated', user: user };
   }
 }

@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { UserRole } from '../model/user.type.enum';
-
 export type UserDocument = User & Document;
-
 @Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class User {
   @Prop({
@@ -31,7 +29,6 @@ export class User {
   @Prop({
     type: String,
     enum: [UserRole.Owner, UserRole.Customer],
-    //default: UserRole.Admin
   })
   userType: string;
 }

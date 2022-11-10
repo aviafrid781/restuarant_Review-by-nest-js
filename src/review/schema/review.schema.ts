@@ -20,5 +20,4 @@ export class Review {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' })
   restaurantId: Restaurant;
 }
-
 export const ReviewSchema = SchemaFactory.createForClass(Review);

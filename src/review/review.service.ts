@@ -1,4 +1,3 @@
-//import { UserI } from './../user/interfaces/user.interface';
 import { ReviewI } from './interfaces/review.interface';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';

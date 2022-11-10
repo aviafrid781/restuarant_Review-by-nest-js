@@ -6,6 +6,6 @@ export class CreateRestaurantDto {
   readonly email: string;
   @IsNotEmpty()
   readonly address: string;
+  @IsNotEmpty()
   readonly owner: string;
- 
 }
